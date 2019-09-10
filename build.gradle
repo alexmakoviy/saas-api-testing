@@ -17,6 +17,11 @@ apply plugin: 'io.qameta.allure'
 group 'saas-api-testing'
 version '1.0-SNAPSHOT'
 
+repositories {
+    //mavenCentral()
+    jcenter()
+}
+
 sourceCompatibility = 1.8
 
 allure {
@@ -24,38 +29,46 @@ allure {
     autoconfigure = true
     aspectjweaver = true
     clean = true
-}
 
-repositories {
-    mavenCentral()
-    jcenter()
+    resultsDir = file('/path/to/project/module1/build/allure-results')
+    reportDir = file('build/allure-results')
+
+    useJUnit4 {
+        version = '2.0-BETA10'
+    }
+
+    useJUnit5 {
+        version = '2.0-BETA10'
+    }
+
+    downloadLink = 'https://dl.bintray.com/qameta/generic/io/qameta/allure/allure/2.1.1/allure-2.1.1.zip'
+
 }
 
 dependencies {
     testCompile 'io.rest-assured:rest-assured:4.1.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'io.rest-assured:json-path:4.1.0'
     testCompile 'io.rest-assured:xml-path:4.1.0'
     testCompile 'io.rest-assured:json-schema-validator:4.1.0'
     testCompile 'io.rest-assured:spring-mock-mvc:4.1.0'
-    testRuntimeOnly('io.qameta.allure:allure-junit5:2.8.1')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testRuntimeOnly ('io.qameta.allure:allure-junit5:2.10.0')
 
-    compile group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.12.1'
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
+    testCompile group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.12.1'
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
 }
 
 test {
-    useJUnitPlatform{
+  /*  useJUnitPlatform{
         includeTags 'API'
     }
-    options {
-        systemProperties(System.getProperties());
+    filter {
+        includeTestsMatching "srs.test.java"
     }
-
-
     testLogging {
         events "passed", "skipped", "failed"
     }
+
     testLogging.showStandardStreams = true
     ignoreFailures = true
 
@@ -70,5 +83,9 @@ test {
             'junit.jupiter.execution.parallel.config.fixed.parallelism': 3
     ]
 
-    forkEvery = 1
+    forkEvery = 1*/
+    useJUnit()
+    options {
+        systemProperties (System.getProperties())
+    }
 }
